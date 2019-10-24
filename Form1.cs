@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -48,8 +49,11 @@ namespace Tragaperras
             checkBox[2] = this.chbox5;
             checkBox[3] = this.chbox10;
             checkBox[4] = this.chbox20;
+            //Metodo para incrementar el tamaño del FORM a pantalla completa
+            WindowState = FormWindowState.Maximized;
+            TopMost = true;
         }
-.
+
         public static class GlobalData
         {
             public static int totalcoins = 0;
@@ -104,6 +108,10 @@ namespace Tragaperras
 
         static async Task SpinSlots1(bool flag)
         {
+            Queue myq = new Queue();
+            myq.Enqueue(20);
+            myq.Enqueue(30);
+            myq.Enqueue(20);
             int i = 0;
             do
             {
@@ -203,9 +211,9 @@ namespace Tragaperras
         static async void confirm()
         {
             await elmein();
-            boxes[0].Image = firstimg;
-            boxes[1].Image = firstimg;
-            boxes[2].Image = firstimg;
+            //boxes[0].Image = firstimg;
+            //boxes[1].Image = firstimg;
+            //boxes[2].Image = firstimg;
             if (boxes[0].Image == boxes[1].Image && boxes[0].Image == boxes[2].Image)
             {
                 if(boxes[0].Image == fifthimg)
@@ -262,10 +270,10 @@ namespace Tragaperras
             } while (i < 60);
         }
 
-        public string solution(int amountcoins, int[] coins)
+        public string solution(int amountcoins, int[] coins)//Recibe la cantidad de creditos y el arreglo de las monedas que se requieren
         {
             int i = 0;
-            GlobalData.result = "Solucion: ";
+            GlobalData.result = "Créditos devueltos: ";
             while (GlobalData.solution != amountcoins)
             {
                 i = coins.Length - 1;
@@ -292,9 +300,9 @@ namespace Tragaperras
 
         private void BtnMoneyReturned_Click(object sender, EventArgs e)
         {
-            int amountcoins = Int32.Parse(labels[0].Text);
-            List<int> finalcoins = new List<int>();
-            int[] coins = new int[5];
+            int amountcoins = Int32.Parse(labels[0].Text);//La cantidad de dinero que se le regresara se sacara del label que controla cuantos creditos tiene la maquinas
+            List<int> finalcoins = new List<int>();//Se crea una lista para almacenar que tipo de monedas querra el usuario su cambio
+            int[] coins = new int[5];//Se declara el arreglo de monedas
             coins[0] = COINS_1;
             coins[1] = COINS_2;
             coins[2] = COINS_5;
@@ -302,12 +310,24 @@ namespace Tragaperras
             coins[4] = COINS_20;
             for (int i =0; i < checkBox.Length; i++)
             {
-                if (checkBox[i].Checked)
+                if (checkBox[i].Checked)//Si se encuentran en check entraran en el if
                 {
-                    finalcoins.Add(coins[i]);
+                    finalcoins.Add(coins[i]);//Aqui la posicion que haya entrado ahora entrara en la lista
                 }
             }
             solution(amountcoins, finalcoins.ToArray());
+        }
+
+        public void pantallaCompleta()
+        {
+            int lx, ly;
+            int sw, sh;
+            lx = this.Location.X;
+            ly = this.Location.Y;
+            sw = this.Size.Width;
+            sh = this.Size.Height;
+            this.Size = Screen.PrimaryScreen.WorkingArea.Size;
+            this.Location = Screen.PrimaryScreen.WorkingArea.Location;
         }
     }
 }
