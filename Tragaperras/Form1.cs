@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Tragaperras
 {
@@ -27,11 +29,12 @@ namespace Tragaperras
         static Label[] labels = new Label[1];
         static CheckBox[] checkBox = new CheckBox[5];
 
-        static Image firstimg = Image.FromFile("C:/Users/Uriel/Pictures/mariochido.PNG");
-        static Image secimg = Image.FromFile("C:/Users/Uriel/Pictures/luigichido.PNG");
-        static Image thirdimg = Image.FromFile("C:/Users/Uriel/Pictures/yoshichido.PNG");
-        static Image fourthimg = Image.FromFile("C:/Users/Uriel/Pictures/bowserjrchido.PNG");
-        static Image fifthimg = Image.FromFile("C:/Users/Uriel/Pictures/mario8bitschido.PNG");
+        static Image firstimg = Image.FromFile("C:/Users/Usuario/Pictures/mariochido.PNG");
+        static Image secimg = Image.FromFile("C:/Users/Usuario/Pictures/luigichido.PNG");
+        static Image thirdimg = Image.FromFile("C:/Users/Usuario/Pictures/yoshichido.PNG");
+        static Image fourthimg = Image.FromFile("C:/Users/Usuario/Pictures/bowserjrchido.PNG");
+        static Image fifthimg = Image.FromFile("C:/Users/Usuario/Pictures/mario8bitschido.PNG");
+        static Queue<int> myq = new Queue<int>();
 
         public btnMoneyinReturned()
         {
@@ -48,8 +51,20 @@ namespace Tragaperras
             checkBox[2] = this.chbox5;
             checkBox[3] = this.chbox10;
             checkBox[4] = this.chbox20;
+            myq.Enqueue(20);
+            myq.Enqueue(30);
+            myq.Enqueue(60);
+            myq.Enqueue(60);
+            myq.Enqueue(30);
+            myq.Enqueue(20);
+            myq.Enqueue(20);
+            myq.Enqueue(30);
+            myq.Enqueue(60);
+            myq.Enqueue(60);
+            myq.Enqueue(30);
+            myq.Enqueue(20);
         }
-.
+
         public static class GlobalData
         {
             public static int totalcoins = 0;
@@ -102,8 +117,9 @@ namespace Tragaperras
             }
         }
 
-        static async Task SpinSlots1(bool flag)
+        private static async void SpinSlots1()
         {
+            int espera = myq.Dequeue();
             int i = 0;
             do
             {
@@ -132,11 +148,12 @@ namespace Tragaperras
                 }
                 i++;
                 await Task.Delay(90);
-            } while (i <= 20);
+            } while (i <= espera);
         }
 
-        static async Task SpinSlots2(bool flag)
+        static async void SpinSlots2()
         {
+            int espera = myq.Dequeue();
             int i = 0;
             do
             {
@@ -165,11 +182,12 @@ namespace Tragaperras
                 }
                 i++;
                 await Task.Delay(90);
-            } while (i <= 30);
+            } while (i <= espera);
         }
 
-        static async Task SpinSlots3(bool flag)
+        static async void SpinSlots3()
         {
+            int espera = myq.Dequeue();
             int i = 0;
             do
             {
@@ -197,15 +215,15 @@ namespace Tragaperras
                 }
                 i++;
                 await Task.Delay(90);
-            } while (i <= 60);
+            } while (i <= espera);
         }
 
         static async void confirm()
         {
             await elmein();
-            boxes[0].Image = firstimg;
-            boxes[1].Image = firstimg;
-            boxes[2].Image = firstimg;
+            //boxes[0].Image = firstimg;
+            //boxes[1].Image = firstimg;
+            //boxes[2].Image = firstimg;
             if (boxes[0].Image == boxes[1].Image && boxes[0].Image == boxes[2].Image)
             {
                 if(boxes[0].Image == fifthimg)
@@ -251,9 +269,12 @@ namespace Tragaperras
         {
             int i = 0;
             bool flag = true;
-            SpinSlots1(flag);
-            SpinSlots2(flag);
-            SpinSlots3(flag);
+            Thread spinslot1 = new Thread(SpinSlots1);
+            Thread spinslot2 = new Thread(SpinSlots2);
+            Thread spinslot3 = new Thread(SpinSlots3);
+            spinslot1.Start();
+            spinslot2.Start();
+            spinslot3.Start();
             do
             {
                 i++;
